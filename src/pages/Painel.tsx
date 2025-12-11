@@ -72,6 +72,7 @@ const Painel = () => {
               onChange={(e) => setTexto(e.target.value)}
               placeholder="Digite aqui..."
               className="min-h-[150px] resize-none bg-transparent border-none focus-visible:ring-0 text-foreground text-center"
+              id="action-edittext"
             />
           </CardContent>
         </Card>
