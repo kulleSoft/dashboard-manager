@@ -20,6 +20,7 @@ const Painel = () => {
   };
 
   const handleSalvar = () => {
+    texto = document.getElementById("action-edittext").value
     console.log("[Painel] Salvar clicked, texto:", texto);
   
   };
