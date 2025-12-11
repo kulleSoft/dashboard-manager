@@ -21,18 +21,12 @@ const Painel = () => {
 
   const handleSalvar = () => {
     console.log("[Painel] Salvar clicked, texto:", texto);
-    toast({
-      title: "Painel salvo!",
-      description: "Suas configurações foram salvas com sucesso.",
-    });
+  
   };
 
   const handleCarregarPainel = () => {
     console.log("[Painel] Carregar painel clicked");
-    toast({
-      title: "Carregando painel...",
-      description: "Aguarde enquanto carregamos suas configurações.",
-    });
+   
   };
 
   const variaveisDisponiveis = [
@@ -105,7 +99,7 @@ const Painel = () => {
                 <p>Tempo:<span className="text-primary">%tempo%</span>.</p>
                 <p>Id trocado: <span className="text-primary">%IdTrocado%</span>.</p>
                 <p>Valor ganho: <span className="text-primary">[NomeVariavel]</span>.</p>
-                <p>Ads fechado: <span className="text-primary">%AdsFechados%</span>"</p>
+                <p>Ads fechado: <span className="text-primary">%AdsFechados%</span>.</p>
               </div>
             </div>
           </CardContent>
