@@ -127,7 +127,7 @@ const Painel = () => {
 
   const handleSalvar = () => {
     const textoGet = (document.getElementById("action-edittext") as HTMLTextAreaElement)?.value;
-    console.log("[Painel] Salvar clicked, texto:", textoGet);
+    console.log("[Painel] Salvar clicked, texto@@", textoGet);
   };
 
   const handleCarregarPainel = () => {
