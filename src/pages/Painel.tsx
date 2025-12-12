@@ -20,9 +20,8 @@ const Painel = () => {
   };
 
   const handleSalvar = () => {
-     let textoGet = document.getElementById("action-edittext").value
-    console.log("[Painel] Salvar clicked, texto@@", textoGet);
-  
+    const textoGet = (document.getElementById("action-edittext") as HTMLTextAreaElement)?.value;
+    console.log("[Painel] Salvar clicked, texto:", textoGet);
   };
 
   const handleCarregarPainel = () => {
@@ -63,7 +62,7 @@ const Painel = () => {
         </div>
 
         {/* Campo de texto */}
-        <Card className="border-primary/50">
+        <Card className="border-primary/50 bg-[#1C2220]">
           <CardHeader className="pb-2">
             <CardTitle className="text-sm text-muted-foreground uppercase tracking-wide">Digite algo</CardTitle>
           </CardHeader>
@@ -79,7 +78,7 @@ const Painel = () => {
         </Card>
 
         {/* Variáveis disponíveis */}
-        <Card className="border-primary/50">
+        <Card className="border-primary/50 bg-[#1C2220]">
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-semibold text-foreground uppercase tracking-wide">Variáveis disponíveis:</CardTitle>
           </CardHeader>
