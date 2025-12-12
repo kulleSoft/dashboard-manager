@@ -1,33 +1,25 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Moon, Sun, LayoutDashboard } from "lucide-react";
-import { toast } from "@/hooks/use-toast";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
 
 const Painel = () => {
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [texto, setTexto] = useState("");
-
-  useEffect(() => {
-    // Remove dark mode by default
-    document.documentElement.classList.remove("dark");
-  }, []);
-
-  const toggleTheme = () => {
-    setIsDarkMode(!isDarkMode);
-    document.documentElement.classList.toggle("dark");
-  };
-
-  const handleSalvar = () => {
-    const textoGet = (document.getElementById("action-edittext") as HTMLTextAreaElement)?.value;
-    console.log("[Painel] Salvar clicked, texto:", textoGet);
-  };
-
-  const handleCarregarPainel = () => {
-    console.log("[Painel] Carregar painel clicked");
-   
-  };
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [filteredVariables, setFilteredVariables] = useState<typeof variaveisDisponiveis>([]);
+  const [cursorPosition, setCursorPosition] = useState(0);
+  const [triggerChar, setTriggerChar] = useState<"%" | "[" | null>(null);
+  const [searchTerm, setSearchTerm] = useState("");
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const variaveisDisponiveis = [
     { nome: "%IdTrocado%", descricao: "Quantidade de IDs trocados" },
@@ -37,6 +29,110 @@ const Painel = () => {
     { nome: "%RegistroFalhas%", descricao: "Registro de falhas" },
     { nome: "%AdsFechados%", descricao: "Quantidade de anúncios que foram fechados" },
   ];
+
+  useEffect(() => {
+    document.documentElement.classList.remove("dark");
+  }, []);
+
+  const toggleTheme = () => {
+    setIsDarkMode(!isDarkMode);
+    document.documentElement.classList.toggle("dark");
+  };
+
+  const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const value = e.target.value;
+    const cursorPos = e.target.selectionStart || 0;
+    setTexto(value);
+    setCursorPosition(cursorPos);
+
+    // Find the last trigger character before cursor
+    const textBeforeCursor = value.substring(0, cursorPos);
+    const lastPercentIndex = textBeforeCursor.lastIndexOf("%");
+    const lastBracketIndex = textBeforeCursor.lastIndexOf("[");
+
+    // Determine which trigger is more recent and valid
+    let activeTrigger: "%" | "[" | null = null;
+    let searchStart = -1;
+
+    if (lastPercentIndex > lastBracketIndex && lastPercentIndex !== -1) {
+      // Check if there's no closing % after the opening one
+      const textAfterTrigger = textBeforeCursor.substring(lastPercentIndex + 1);
+      if (!textAfterTrigger.includes("%")) {
+        activeTrigger = "%";
+        searchStart = lastPercentIndex;
+      }
+    } else if (lastBracketIndex > lastPercentIndex && lastBracketIndex !== -1) {
+      // Check if there's no closing ] after the opening one
+      const textAfterTrigger = textBeforeCursor.substring(lastBracketIndex + 1);
+      if (!textAfterTrigger.includes("]")) {
+        activeTrigger = "[";
+        searchStart = lastBracketIndex;
+      }
+    }
+
+    if (activeTrigger && searchStart !== -1) {
+      const search = textBeforeCursor.substring(searchStart + 1).toLowerCase();
+      setSearchTerm(search);
+      setTriggerChar(activeTrigger);
+
+      if (activeTrigger === "%") {
+        const filtered = variaveisDisponiveis.filter((v) =>
+          v.nome.toLowerCase().includes(search) || 
+          v.descricao.toLowerCase().includes(search)
+        );
+        setFilteredVariables(filtered);
+        setShowSuggestions(filtered.length > 0);
+      } else {
+        // For custom variables, show a hint
+        setFilteredVariables([{ nome: "[NomeVariavel]", descricao: "Variável personalizada" }]);
+        setShowSuggestions(true);
+      }
+    } else {
+      setShowSuggestions(false);
+      setTriggerChar(null);
+    }
+  };
+
+  const insertVariable = (variableName: string) => {
+    if (!textareaRef.current) return;
+
+    const textBeforeCursor = texto.substring(0, cursorPosition);
+    const textAfterCursor = texto.substring(cursorPosition);
+
+    // Find the trigger position
+    let triggerIndex = -1;
+    if (triggerChar === "%") {
+      triggerIndex = textBeforeCursor.lastIndexOf("%");
+    } else if (triggerChar === "[") {
+      triggerIndex = textBeforeCursor.lastIndexOf("[");
+    }
+
+    if (triggerIndex !== -1) {
+      const newText = texto.substring(0, triggerIndex) + variableName + textAfterCursor;
+      setTexto(newText);
+      
+      // Set cursor position after the inserted variable
+      const newCursorPos = triggerIndex + variableName.length;
+      setTimeout(() => {
+        if (textareaRef.current) {
+          textareaRef.current.focus();
+          textareaRef.current.setSelectionRange(newCursorPos, newCursorPos);
+        }
+      }, 0);
+    }
+
+    setShowSuggestions(false);
+    setTriggerChar(null);
+  };
+
+  const handleSalvar = () => {
+    const textoGet = (document.getElementById("action-edittext") as HTMLTextAreaElement)?.value;
+    console.log("[Painel] Salvar clicked, texto:", textoGet);
+  };
+
+  const handleCarregarPainel = () => {
+    console.log("[Painel] Carregar painel clicked");
+  };
 
   return (
     <div className="min-h-screen bg-background text-foreground p-4">
@@ -66,14 +162,38 @@ const Painel = () => {
           <CardHeader className="pb-2">
             <CardTitle className="text-sm text-muted-foreground uppercase tracking-wide">Digite algo</CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="relative">
             <Textarea
+              ref={textareaRef}
               value={texto}
-              onChange={(e) => setTexto(e.target.value)}
-              placeholder="Digite aqui..."
+              onChange={handleTextChange}
+              placeholder="Digite aqui... Use % ou [ para inserir variáveis"
               className="min-h-[150px] resize-none bg-transparent border-none focus-visible:ring-0 text-foreground text-center"
               id="action-edittext"
             />
+            
+            {/* Autocomplete suggestions */}
+            {showSuggestions && (
+              <div className="absolute left-4 right-4 bottom-2 z-50">
+                <Command className="rounded-lg border shadow-md bg-popover">
+                  <CommandList>
+                    <CommandEmpty>Nenhuma variável encontrada</CommandEmpty>
+                    <CommandGroup heading={triggerChar === "%" ? "Variáveis do sistema" : "Variável personalizada"}>
+                      {filteredVariables.map((variavel, index) => (
+                        <CommandItem
+                          key={index}
+                          onSelect={() => insertVariable(variavel.nome)}
+                          className="cursor-pointer"
+                        >
+                          <span className="text-primary font-medium">{variavel.nome}</span>
+                          <span className="ml-2 text-muted-foreground text-sm">→ {variavel.descricao}</span>
+                        </CommandItem>
+                      ))}
+                    </CommandGroup>
+                  </CommandList>
+                </Command>
+              </div>
+            )}
           </CardContent>
         </Card>
 
