@@ -17,7 +17,7 @@ const Painel = () => {
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [filteredVariables, setFilteredVariables] = useState<typeof variaveisDisponiveis>([]);
   const [cursorPosition, setCursorPosition] = useState(0);
-  const [triggerChar, setTriggerChar] = useState<"%" | "[" | null>(null);
+  const [triggerChar, setTriggerChar] = useState<"%" | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -48,25 +48,16 @@ const Painel = () => {
     // Find the last trigger character before cursor
     const textBeforeCursor = value.substring(0, cursorPos);
     const lastPercentIndex = textBeforeCursor.lastIndexOf("%");
-    const lastBracketIndex = textBeforeCursor.lastIndexOf("[");
 
-    // Determine which trigger is more recent and valid
-    let activeTrigger: "%" | "[" | null = null;
+    // Determine which trigger is valid
+    let activeTrigger: "%" | null = null;
     let searchStart = -1;
 
-    if (lastPercentIndex > lastBracketIndex && lastPercentIndex !== -1) {
-      // Check if there's no closing % after the opening one
+    if (lastPercentIndex !== -1) {
       const textAfterTrigger = textBeforeCursor.substring(lastPercentIndex + 1);
       if (!textAfterTrigger.includes("%")) {
         activeTrigger = "%";
         searchStart = lastPercentIndex;
-      }
-    } else if (lastBracketIndex > lastPercentIndex && lastBracketIndex !== -1) {
-      // Check if there's no closing ] after the opening one
-      const textAfterTrigger = textBeforeCursor.substring(lastBracketIndex + 1);
-      if (!textAfterTrigger.includes("]")) {
-        activeTrigger = "[";
-        searchStart = lastBracketIndex;
       }
     }
 
@@ -75,18 +66,12 @@ const Painel = () => {
       setSearchTerm(search);
       setTriggerChar(activeTrigger);
 
-      if (activeTrigger === "%") {
-        const filtered = variaveisDisponiveis.filter((v) =>
-          v.nome.toLowerCase().includes(search) || 
-          v.descricao.toLowerCase().includes(search)
-        );
-        setFilteredVariables(filtered);
-        setShowSuggestions(filtered.length > 0);
-      } else {
-        // For custom variables, show a hint
-        setFilteredVariables([{ nome: "[NomeVariavel]", descricao: "Variável personalizada" }]);
-        setShowSuggestions(true);
-      }
+      const filtered = variaveisDisponiveis.filter((v) =>
+        v.nome.toLowerCase().includes(search) || 
+        v.descricao.toLowerCase().includes(search)
+      );
+      setFilteredVariables(filtered);
+      setShowSuggestions(filtered.length > 0);
     } else {
       setShowSuggestions(false);
       setTriggerChar(null);
@@ -103,8 +88,6 @@ const Painel = () => {
     let triggerIndex = -1;
     if (triggerChar === "%") {
       triggerIndex = textBeforeCursor.lastIndexOf("%");
-    } else if (triggerChar === "[") {
-      triggerIndex = textBeforeCursor.lastIndexOf("[");
     }
 
     if (triggerIndex !== -1) {
