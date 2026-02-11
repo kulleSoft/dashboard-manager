@@ -182,29 +182,40 @@ const Painel = () => {
 
         {/* Variáveis disponíveis */}
         <Card className="border-primary/50 dark:bg-[#1C2220]">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-semibold text-foreground uppercase tracking-wide">Variáveis disponíveis:</CardTitle>
+          <CardHeader className="pb-3">
+            <CardTitle className="text-sm font-semibold text-foreground uppercase tracking-wide">Variáveis disponíveis</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-3">
-            <div className="space-y-1">
-              {variaveisDisponiveis.map((variavel, index) => (
-                <p key={index} className="text-sm text-muted-foreground">
-                  - <span className="text-primary font-medium">{variavel.nome}</span> → {variavel.descricao}
-                </p>
-              ))}
-            </div>
-            <p className="text-sm text-muted-foreground">
-              -<span className="text-primary font-medium">[NomeVariavel]</span> → Você também pode utilizar variáveis personalizadas. Basta colocar o nome entre colchetes [ ] e o valor correspondente será recuperado.
-            </p>
-            
-            <div className="pt-2 border-t border-border">
-              <h3 className="text-sm font-semibold text-foreground mb-2">Exemplo de uso:</h3>
-              <div className="text-sm text-muted-foreground space-y-1">
-                <p>Tempo:<span className="text-primary">%tempo%</span>.</p>
-                <p>Id trocado: <span className="text-primary">%IdTrocado%</span>.</p>
-                <p>Valor ganho: <span className="text-primary">[NomeVariavel]</span>.</p>
-                <p>Ads fechado: <span className="text-primary">%AdsFechados%</span>.</p>
+          <CardContent className="space-y-2">
+            {variaveisDisponiveis.map((variavel, index) => (
+              <div key={index} className="flex items-center gap-2 px-3 py-2 rounded-lg bg-secondary/50 border border-border/50">
+                <code className="font-mono text-xs text-primary bg-primary/10 px-2 py-0.5 rounded-md font-medium whitespace-nowrap">
+                  {variavel.nome}
+                </code>
+                <span className="text-muted-foreground text-xs">→</span>
+                <span className="text-sm text-muted-foreground">{variavel.descricao}</span>
               </div>
+            ))}
+            <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-secondary/50 border border-border/50">
+              <code className="font-mono text-xs text-primary bg-primary/10 px-2 py-0.5 rounded-md font-medium whitespace-nowrap">
+                [NomeVariavel]
+              </code>
+              <span className="text-muted-foreground text-xs">→</span>
+              <span className="text-sm text-muted-foreground">Variável personalizada entre colchetes</span>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Exemplo de uso */}
+        <Card className="border-primary/50 dark:bg-[#1C2220]">
+          <CardHeader className="pb-3">
+            <CardTitle className="text-sm font-semibold text-foreground uppercase tracking-wide">Exemplo de uso</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="rounded-lg bg-secondary/30 border border-border/50 p-4 font-mono text-sm space-y-1.5">
+              <p className="text-muted-foreground">Tempo: <span className="text-primary font-medium">%Tempo%</span></p>
+              <p className="text-muted-foreground">Id trocado: <span className="text-primary font-medium">%IdTrocado%</span></p>
+              <p className="text-muted-foreground">Valor ganho: <span className="text-primary font-medium">[NomeVariavel]</span></p>
+              <p className="text-muted-foreground">Ads fechado: <span className="text-primary font-medium">%AdsFechados%</span></p>
             </div>
           </CardContent>
         </Card>
