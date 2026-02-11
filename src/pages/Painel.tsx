@@ -156,7 +156,7 @@ const Painel = () => {
                 value={texto}
                 onChange={handleTextChange}
                 placeholder="Digite sua mensagem aqui...&#10;Use % para inserir variáveis do sistema"
-                className="min-h-[140px] resize-none bg-transparent border-none focus-visible:ring-0 focus-visible:ring-offset-0 text-foreground text-sm leading-relaxed placeholder:text-muted-foreground/50"
+                className="min-h-[140px] resize-none bg-transparent border-none focus-visible:ring-0 focus-visible:ring-offset-0 text-foreground text-sm leading-relaxed placeholder:text-muted-foreground/50 text-center"
                 id="action-edittext"
               />
               <div className="flex items-center justify-between px-3 py-1.5 border-t border-border/30">
