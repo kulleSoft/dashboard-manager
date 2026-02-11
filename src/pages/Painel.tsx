@@ -141,35 +141,48 @@ const Painel = () => {
         </div>
 
         {/* Campo de texto */}
-        <Card className="border-primary/50 dark:bg-[#1C2220]">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm text-muted-foreground uppercase tracking-wide">Digite algo</CardTitle>
+        <Card className="border-primary/50 dark:bg-[#1C2220] overflow-hidden">
+          <CardHeader className="pb-1 pt-4 px-4">
+            <div className="flex items-center gap-2">
+              <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
+              <CardTitle className="text-xs font-semibold text-muted-foreground uppercase tracking-widest">Mensagem do painel</CardTitle>
+            </div>
           </CardHeader>
-          <CardContent className="relative">
-            <Textarea
-              ref={textareaRef}
-              value={texto}
-              onChange={handleTextChange}
-              placeholder="Digite aqui... Use % ou [ para inserir variáveis"
-              className="min-h-[150px] resize-none bg-transparent border-none focus-visible:ring-0 text-foreground text-center"
-              id="action-edittext"
-            />
+          <CardContent className="relative px-4 pb-4">
+            <div className="rounded-xl bg-secondary/30 border border-border/50 p-1 mt-2 transition-all duration-200 focus-within:border-primary/50 focus-within:ring-1 focus-within:ring-primary/20">
+              <Textarea
+                ref={textareaRef}
+                value={texto}
+                onChange={handleTextChange}
+                placeholder="Digite sua mensagem aqui...&#10;Use % para inserir variáveis do sistema"
+                className="min-h-[140px] resize-none bg-transparent border-none focus-visible:ring-0 focus-visible:ring-offset-0 text-foreground text-sm leading-relaxed placeholder:text-muted-foreground/50"
+                id="action-edittext"
+              />
+              <div className="flex items-center justify-between px-3 py-1.5 border-t border-border/30">
+                <span className="text-[10px] text-muted-foreground/60 font-mono">
+                  {texto.length} caracteres
+                </span>
+                <span className="text-[10px] text-primary/60 font-medium">
+                  Dica: digite <code className="bg-primary/10 px-1 rounded">%</code> para variáveis
+                </span>
+              </div>
+            </div>
             
             {/* Autocomplete suggestions */}
             {showSuggestions && (
-              <div className="absolute left-4 right-4 bottom-2 z-50">
-                <Command className="rounded-lg border shadow-md bg-popover">
+              <div className="absolute left-4 right-4 bottom-6 z-50">
+                <Command className="rounded-xl border border-primary/20 shadow-lg shadow-primary/5 bg-popover">
                   <CommandList>
                     <CommandEmpty>Nenhuma variável encontrada</CommandEmpty>
-                    <CommandGroup heading={triggerChar === "%" ? "Variáveis do sistema" : "Variável personalizada"}>
+                    <CommandGroup heading="Variáveis do sistema">
                       {filteredVariables.map((variavel, index) => (
                         <CommandItem
                           key={index}
                           onSelect={() => insertVariable(variavel.nome)}
-                          className="cursor-pointer"
+                          className="cursor-pointer rounded-lg"
                         >
-                          <span className="text-primary font-medium">{variavel.nome}</span>
-                          <span className="ml-2 text-muted-foreground text-sm">→ {variavel.descricao}</span>
+                          <code className="font-mono text-xs text-primary bg-primary/10 px-1.5 py-0.5 rounded-md">{variavel.nome}</code>
+                          <span className="ml-2 text-muted-foreground text-xs">→ {variavel.descricao}</span>
                         </CommandItem>
                       ))}
                     </CommandGroup>
