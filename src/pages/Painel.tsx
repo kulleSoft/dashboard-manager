@@ -210,16 +210,15 @@ const Painel = () => {
         </Card>
 
         {/* Botões */}
-        <div className="space-y-3 pt-4">
+        <div className="flex gap-3 pt-4">
           <Button 
-            className="w-full py-6 text-lg rounded-full" 
+            className="flex-1 py-5 text-base rounded-xl bg-primary/20 text-primary border border-primary/30 hover:bg-primary/30 font-medium" 
             onClick={handleSalvar}
           >
             Salvar
           </Button>
           <Button 
-            variant="outline" 
-            className="w-full py-6 text-lg rounded-full text-primary border-primary hover:bg-primary/5" 
+            className="flex-1 py-5 text-base rounded-xl bg-primary/20 text-primary border border-primary/30 hover:bg-primary/30 font-medium" 
             onClick={handleCarregarPainel}
           >
             Carregar painel
