@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/components/ui/accordion";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -194,44 +195,59 @@ const Painel = () => {
         </Card>
 
         {/* Variáveis disponíveis */}
-        <Card className="border-primary/50 dark:bg-[#1C2220]">
-          <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-semibold text-foreground uppercase tracking-wide">Variáveis disponíveis</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-2">
-            {variaveisDisponiveis.map((variavel, index) => (
-              <div key={index} className="flex items-center gap-2 px-3 py-2 rounded-lg bg-secondary/50 border border-border/50">
-                <code className="font-mono text-xs text-primary bg-primary/10 px-2 py-0.5 rounded-md font-medium whitespace-nowrap">
-                  {variavel.nome}
-                </code>
-                <span className="text-muted-foreground text-xs">→</span>
-                <span className="text-sm text-muted-foreground">{variavel.descricao}</span>
-              </div>
-            ))}
-            <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-secondary/50 border border-border/50">
-              <code className="font-mono text-xs text-primary bg-primary/10 px-2 py-0.5 rounded-md font-medium whitespace-nowrap">
-                [NomeVariavel]
-              </code>
-              <span className="text-muted-foreground text-xs">→</span>
-              <span className="text-sm text-muted-foreground">Variável personalizada entre colchetes</span>
-            </div>
-          </CardContent>
-        </Card>
+        <Accordion type="multiple" className="space-y-3">
+          <AccordionItem value="variaveis" className="border-none">
+            <Card className="border-primary/50 dark:bg-[#1C2220] overflow-hidden">
+              <AccordionTrigger className="px-4 py-3 hover:no-underline">
+                <div className="flex items-center gap-2">
+                  <div className="w-2 h-2 rounded-full bg-primary" />
+                  <span className="text-xs font-semibold text-muted-foreground uppercase tracking-widest">Variáveis disponíveis</span>
+                </div>
+              </AccordionTrigger>
+              <AccordionContent>
+                <div className="px-4 pb-4 space-y-2">
+                  {variaveisDisponiveis.map((variavel, index) => (
+                    <div key={index} className="flex items-center gap-2 px-3 py-2 rounded-lg bg-secondary/50 border border-border/50">
+                      <code className="font-mono text-xs text-primary bg-primary/10 px-2 py-0.5 rounded-md font-medium whitespace-nowrap">
+                        {variavel.nome}
+                      </code>
+                      <span className="text-muted-foreground text-xs">→</span>
+                      <span className="text-sm text-muted-foreground">{variavel.descricao}</span>
+                    </div>
+                  ))}
+                  <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-secondary/50 border border-border/50">
+                    <code className="font-mono text-xs text-primary bg-primary/10 px-2 py-0.5 rounded-md font-medium whitespace-nowrap">
+                      [NomeVariavel]
+                    </code>
+                    <span className="text-muted-foreground text-xs">→</span>
+                    <span className="text-sm text-muted-foreground">Variável personalizada entre colchetes</span>
+                  </div>
+                </div>
+              </AccordionContent>
+            </Card>
+          </AccordionItem>
 
-        {/* Exemplo de uso */}
-        <Card className="border-primary/50 dark:bg-[#1C2220]">
-          <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-semibold text-foreground uppercase tracking-wide">Exemplo de uso</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="rounded-lg bg-secondary/30 border border-border/50 p-4 font-mono text-sm space-y-1.5">
-              <p className="text-muted-foreground">Tempo: <span className="text-primary font-medium">%Tempo%</span></p>
-              <p className="text-muted-foreground">Id trocado: <span className="text-primary font-medium">%IdTrocado%</span></p>
-              <p className="text-muted-foreground">Valor ganho: <span className="text-primary font-medium">[NomeVariavel]</span></p>
-              <p className="text-muted-foreground">Ads fechado: <span className="text-primary font-medium">%AdsFechados%</span></p>
-            </div>
-          </CardContent>
-        </Card>
+          <AccordionItem value="exemplo" className="border-none">
+            <Card className="border-primary/50 dark:bg-[#1C2220] overflow-hidden">
+              <AccordionTrigger className="px-4 py-3 hover:no-underline">
+                <div className="flex items-center gap-2">
+                  <div className="w-2 h-2 rounded-full bg-primary" />
+                  <span className="text-xs font-semibold text-muted-foreground uppercase tracking-widest">Exemplo de uso</span>
+                </div>
+              </AccordionTrigger>
+              <AccordionContent>
+                <div className="px-4 pb-4">
+                  <div className="rounded-lg bg-secondary/30 border border-border/50 p-4 font-mono text-sm space-y-1.5">
+                    <p className="text-muted-foreground">Tempo: <span className="text-primary font-medium">%Tempo%</span></p>
+                    <p className="text-muted-foreground">Id trocado: <span className="text-primary font-medium">%IdTrocado%</span></p>
+                    <p className="text-muted-foreground">Valor ganho: <span className="text-primary font-medium">[NomeVariavel]</span></p>
+                    <p className="text-muted-foreground">Ads fechado: <span className="text-primary font-medium">%AdsFechados%</span></p>
+                  </div>
+                </div>
+              </AccordionContent>
+            </Card>
+          </AccordionItem>
+        </Accordion>
 
         {/* Botões */}
         <div className="flex gap-3 pt-4">
